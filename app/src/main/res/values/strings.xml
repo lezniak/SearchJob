@@ -3,4 +3,5 @@
     <string name="welcome_text">Please click the button below and follow the instructions to sign up now</string>
     <string name="welcome_header">Would you\nlike to Sign Up?</string>
     <string name="sign_up">Sign Up</string>
+    <string name="enter_cred">Enter your credentials</string>
 </resources>
