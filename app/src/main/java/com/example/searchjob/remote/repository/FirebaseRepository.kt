@@ -11,31 +11,28 @@ private const val TAG = "FIREBASE_REPO"
 class FirebaseRepository {
     private var auth: FirebaseAuth = Firebase.auth
 
-    private fun register(
+     fun registerAccount(
         email: String,
         password: String,
-        onError: (String) -> Unit,
-        onRegister: (FirebaseUser) -> Unit
+        onReturn : (Boolean) -> Unit
     ) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    if (user != null) {
-                        onRegister(user)
-                    }
+                    onReturn(true)
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
 
-                    onError(task.exception!!.message!!)
+                    onReturn(false)
                 }
             }
     }
 
-    private fun login(
+    fun loginAccount(
         email: String, password: String, onError: (String) -> Unit,
         onLogin: (FirebaseUser) -> Unit
     ) {

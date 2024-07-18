@@ -1,16 +1,29 @@
 package com.example.searchjob.infrastructure.utils
 
+import android.graphics.Color
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,4 +44,65 @@ fun HeaderAndText(@StringRes header: Int,@StringRes text: Int, isCenterded : Boo
 @Composable
 private fun HeaderAndTextPrev() {
     HeaderAndText(header = R.string.welcome_header, text = R.string.welcome_text)
+}
+
+@Composable
+fun ButtonWithLoader(
+    buttonText: String,
+    backgroundColor: androidx.compose.ui.graphics.Color,
+    contentColor: androidx.compose.ui.graphics.Color = White,
+    showLoader: Boolean = false,
+    showBorder: Boolean,
+    onClick: () -> Unit,
+) {
+    if (showLoader) {
+        Row(
+            modifier = Modifier
+                .widthIn(max = 600.dp)
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .height(48.dp)
+                .clickable { onClick() }
+                .border(
+                    if (showBorder) 1.dp else 0.dp,
+                    MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(50.dp)
+                )
+                .background(backgroundColor, RoundedCornerShape(50.dp)),
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .widthIn(max = 600.dp)
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                .height(48.dp)
+                .clickable { onClick() } // motionClickEvent is my custom click modifier, use clickable modifier over here
+                .border(
+                    if (showBorder) 1.dp else 0.dp,
+                    MaterialTheme.colorScheme.primary.copy(0.08f),
+                    RoundedCornerShape(50.dp)
+                )
+                .background(backgroundColor, RoundedCornerShape(50.dp)),
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = buttonText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = contentColor,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyAppBar(text : String) {
+    TopAppBar(
+        title = { Text(text) }
+    )
 }

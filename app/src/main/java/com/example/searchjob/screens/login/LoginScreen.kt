@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -25,25 +26,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.searchjob.R
+import com.example.searchjob.infrastructure.utils.ButtonWithLoader
 import com.example.searchjob.infrastructure.utils.HeaderAndText
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.sin
 
 @Composable
-fun LoginScreen(snackbarHostState: SnackbarHostState) {
+fun LoginScreen(snackbarHostState: SnackbarHostState, onSuccessRegister: () -> Unit) {
+    val viewModel: LoginViewModel = hiltViewModel()
+    val register by viewModel.onSuccessRegister.collectAsState()
+
     LoginSection(snackbarHostState)
+
+    if (register)
+        onSuccessRegister()
 }
 
 @Composable
@@ -55,7 +68,8 @@ private fun LoginSection(snackbarHostState: SnackbarHostState){
 }
 
 @Composable
-fun InputSection(viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),snackbarHostState: SnackbarHostState) {
+fun InputSection(snackbarHostState: SnackbarHostState) {
+    val viewModel: LoginViewModel = hiltViewModel()
     val email by viewModel.email.collectAsState()
     val phoneNumber by viewModel.phoneNumber.collectAsState()
     val password by viewModel.password.collectAsState()
@@ -63,6 +77,7 @@ fun InputSection(viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compos
     val passwordVisible by viewModel.passwordVisible.collectAsState()
     val repeatPasswordVisible by viewModel.repeatPasswordVisible.collectAsState()
     val termsChecked by viewModel.termsChecked.collectAsState()
+    val isLoadingbutton by viewModel.isLoadingButton.collectAsState()
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
@@ -135,16 +150,33 @@ fun InputSection(viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compos
                 fontSize = 12.sp
             )
         }
-        Button(onClick = {
-            viewModel.onValidate() { text ->
-                scope.launch {
-                    snackbarHostState.showSnackbar(text, actionLabel = "Dismiss",false,SnackbarDuration.Short)
-                }
-            }
-        }, modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp), shape = RectangleShape) {
-            Text(text = stringResource(id = R.string.sign_up))
+
+        ButtonWithLoader(
+            buttonText = stringResource(id = R.string.sign_up),
+            backgroundColor = MaterialTheme.colorScheme.primary,
+            contentColor = Black,
+            showBorder = true,
+            showLoader = isLoadingbutton
+        ) {
+            viewModel.setIsLoadingButton()
+
+            onRegisterButtonClick(viewModel,scope,snackbarHostState)
         }
     }
+}
+
+fun onRegisterButtonClick(
+    viewModel: LoginViewModel,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState
+) {
+    val result = viewModel.onValidate() { text ->
+        scope.launch {
+            snackbarHostState.showSnackbar(text, actionLabel = "Dismiss",false,SnackbarDuration.Short)
+            viewModel.setIsLoadingButton()
+        }
+    }
+
+    if (result)
+        viewModel.registerAccount()
 }

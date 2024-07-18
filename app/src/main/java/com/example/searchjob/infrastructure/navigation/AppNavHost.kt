@@ -7,8 +7,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.searchjob.screens.HomeScreen.HomeScreen
 import com.example.searchjob.screens.login.LoginScreen
 import com.example.searchjob.screens.welcome.WelcomeScreen
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 
 @Composable
@@ -17,7 +20,8 @@ fun AppNavHost(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
-    NavHost(navController = navController, startDestination = Welcome.route,modifier){
+    val user = Firebase.auth.currentUser
+    NavHost(navController = navController, startDestination = if(user != null) HomeScreen.route else Welcome.route,modifier){
         composable(Welcome.route){
             WelcomeScreen {
                 navController.navigateSingleTopTo(Login.route)
@@ -25,7 +29,13 @@ fun AppNavHost(
         }
 
         composable(Login.route){
-            LoginScreen(snackbarHostState)
+            LoginScreen(snackbarHostState) {
+                navController.navigateAndClearHistory(HomeScreen.route)
+            }
+        }
+
+        composable(HomeScreen.route){
+            HomeScreen()
         }
     }
 }
@@ -39,4 +49,13 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         }
         launchSingleTop = true
         restoreState = true
+    }
+
+fun NavHostController.navigateAndClearHistory(route: String) =
+    this.navigate(route) {
+        popUpTo(
+            this@navigateAndClearHistory.graph.findStartDestination().id
+        ) {
+            inclusive = true
+        }
     }

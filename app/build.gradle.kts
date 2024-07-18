@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+
+    id ("kotlin-kapt")
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -56,6 +59,20 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.navigation:navigation-compose:2.7.1")
+
+    // For hilt Implementation
+    implementation("com.google.dagger:hilt-android:2.46.1")
+    kapt ("com.google.dagger:hilt-compiler:2.46.1")
+
+    // For instrumentation tests
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.46.1")
+    kaptAndroidTest ("com.google.dagger:hilt-android-compiler:2.46.1")
+
+    // For local unit tests
+    testImplementation ("com.google.dagger:hilt-android-testing:2.46.1")
+    kaptTest ("com.google.dagger:hilt-compiler:2.46.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
