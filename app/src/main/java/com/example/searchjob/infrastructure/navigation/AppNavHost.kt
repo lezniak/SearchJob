@@ -2,15 +2,24 @@ package com.example.searchjob.infrastructure.navigation
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.searchjob.screens.HomeScreen.HomeScreen
-import com.example.searchjob.screens.login.LoginScreen
+import com.example.searchjob.screens.login.RegisterScreen
 import com.example.searchjob.screens.welcome.WelcomeScreen
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 
@@ -21,15 +30,17 @@ fun AppNavHost(
     modifier: Modifier = Modifier
 ) {
     val user = Firebase.auth.currentUser
+
+    userState(navController)
     NavHost(navController = navController, startDestination = if(user != null) HomeScreen.route else Welcome.route,modifier){
         composable(Welcome.route){
             WelcomeScreen {
-                navController.navigateSingleTopTo(Login.route)
+                navController.navigateSingleTopTo(Register.route)
             }
         }
 
-        composable(Login.route){
-            LoginScreen(snackbarHostState) {
+        composable(Register.route){
+            RegisterScreen(snackbarHostState) {
                 navController.navigateAndClearHistory(HomeScreen.route)
             }
         }
@@ -38,6 +49,23 @@ fun AppNavHost(
             HomeScreen()
         }
     }
+}
+@Composable
+fun userState(navController: NavHostController) {
+    val currentOnAuthStateChanged by rememberUpdatedState { auth: FirebaseAuth ->
+        if (auth.currentUser == null) {
+            navController.navigateAndClearHistory(Welcome.route)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        val authListener = FirebaseAuth.AuthStateListener(currentOnAuthStateChanged)
+        FirebaseAuth.getInstance().addAuthStateListener(authListener)
+        onDispose {
+            FirebaseAuth.getInstance().removeAuthStateListener(authListener)
+        }
+    }
+
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) =

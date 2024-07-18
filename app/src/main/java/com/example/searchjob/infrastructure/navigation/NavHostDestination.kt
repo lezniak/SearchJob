@@ -13,11 +13,11 @@ data object Welcome : AppDestination{
         get() = "Welcome"
 }
 
-data object Login : AppDestination{
+data object Register : AppDestination{
     override val route: String
-        get() = "login"
+        get() = "register"
     override val name: String
-        get() = "Login"
+        get() = "Register"
 }
 
 data object HomeScreen : AppDestination {
@@ -28,5 +28,5 @@ data object HomeScreen : AppDestination {
 
 }
 
-val allDestinationBeforeRegister = listOf(Login,Welcome)
+val allDestinationBeforeRegister = listOf(Register,Welcome)
 val allDestinationAfterRegister = listOf(HomeScreen)

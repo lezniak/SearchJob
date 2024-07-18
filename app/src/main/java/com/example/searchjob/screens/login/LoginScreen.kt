@@ -49,18 +49,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(snackbarHostState: SnackbarHostState, onSuccessRegister: () -> Unit) {
+fun RegisterScreen(snackbarHostState: SnackbarHostState, onSuccessRegister: () -> Unit) {
     val viewModel: LoginViewModel = hiltViewModel()
     val register by viewModel.onSuccessRegister.collectAsState()
 
-    LoginSection(snackbarHostState)
+    RegisterSection(snackbarHostState)
 
     if (register)
         onSuccessRegister()
 }
 
 @Composable
-private fun LoginSection(snackbarHostState: SnackbarHostState){
+private fun RegisterSection(snackbarHostState: SnackbarHostState){
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         HeaderAndText(header = R.string.sign_up, text = R.string.enter_cred,true)
         InputSection(snackbarHostState = snackbarHostState)
