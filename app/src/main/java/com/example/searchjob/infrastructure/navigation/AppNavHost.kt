@@ -1,6 +1,6 @@
 package com.example.searchjob.infrastructure.navigation
 
-import android.util.Log
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -12,7 +12,11 @@ import com.example.searchjob.screens.welcome.WelcomeScreen
 
 
 @Composable
-fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun AppNavHost(
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
     NavHost(navController = navController, startDestination = Welcome.route,modifier){
         composable(Welcome.route){
             WelcomeScreen {
@@ -21,24 +25,18 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier = Modifier) 
         }
 
         composable(Login.route){
-            LoginScreen()
+            LoginScreen(snackbarHostState)
         }
     }
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
-        // Pop up to the start destination of the graph to
-        // avoid building up a large stack of destinations
-        // on the back stack as users select items
         popUpTo(
             this@navigateSingleTopTo.graph.findStartDestination().id
         ) {
             saveState = true
         }
-        // Avoid multiple copies of the same destination when
-        // reselecting the same item
         launchSingleTop = true
-        // Restore state when reselecting a previously selected item
         restoreState = true
     }
