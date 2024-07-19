@@ -25,12 +25,12 @@ import com.example.searchjob.R
 import com.example.searchjob.infrastructure.utils.HeaderAndText
 
 @Composable
-fun WelcomeScreen(onSignUpClick : () -> Unit) {
-    WelcomeSection(onSignUpClick)
+fun WelcomeScreen(onSignUpClick : () -> Unit,onSignInClick : () -> Unit ) {
+    WelcomeSection(onSignUpClick,onSignInClick)
 }
 
 @Composable
-private fun WelcomeSection(onSignUpClick: () -> Unit) {
+private fun WelcomeSection(onSignUpClick: () -> Unit,onSignInClick : () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Bottom),
@@ -72,7 +72,7 @@ private fun WelcomeSection(onSignUpClick: () -> Unit) {
                     ) {
                         Text(text = "Sign up")
                     }
-                    TextButton(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
+                    TextButton(onClick = onSignInClick, modifier = Modifier.fillMaxWidth()) {
                         Text(text = "Sign in")
                     }
                 }
@@ -86,5 +86,5 @@ private fun WelcomeSection(onSignUpClick: () -> Unit) {
 @Preview
 @Composable
 private fun WelcomeScreenPrev() {
-    WelcomeSection({})
+    WelcomeSection({},{})
 }

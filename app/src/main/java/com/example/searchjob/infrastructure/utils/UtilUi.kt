@@ -85,7 +85,7 @@ fun ButtonWithLoader(
                 .background(backgroundColor, RoundedCornerShape(50.dp)),
             horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
         ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.surface, modifier = Modifier.size(28.dp))
         }
     } else {
         Row(

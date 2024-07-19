@@ -28,5 +28,13 @@ data object HomeScreen : AppDestination {
 
 }
 
+
+data object LoginScreen : AppDestination {
+    override val route: String
+        get() = "login"
+    override val name: String
+        get() = "Login"
+}
+
 val allDestinationBeforeRegister = listOf(Register,Welcome)
 val allDestinationAfterRegister = listOf(HomeScreen)

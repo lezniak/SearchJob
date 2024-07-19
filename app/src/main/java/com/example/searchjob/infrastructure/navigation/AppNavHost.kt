@@ -3,23 +3,19 @@ package com.example.searchjob.infrastructure.navigation
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.searchjob.screens.HomeScreen.HomeScreen
-import com.example.searchjob.screens.login.RegisterScreen
+import com.example.searchjob.screens.login.LoginScreen
+import com.example.searchjob.screens.register.RegisterScreen
 import com.example.searchjob.screens.welcome.WelcomeScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 
@@ -34,9 +30,11 @@ fun AppNavHost(
     userState(navController)
     NavHost(navController = navController, startDestination = if(user != null) HomeScreen.route else Welcome.route,modifier){
         composable(Welcome.route){
-            WelcomeScreen {
+            WelcomeScreen (onSignUpClick = {
                 navController.navigateSingleTopTo(Register.route)
-            }
+            }, onSignInClick = {
+                navController.navigateSingleTopTo(LoginScreen.route)
+            })
         }
 
         composable(Register.route){
@@ -47,6 +45,12 @@ fun AppNavHost(
 
         composable(HomeScreen.route){
             HomeScreen()
+        }
+
+        composable(LoginScreen.route){
+            LoginScreen {
+                navController.navigateSingleTopTo(HomeScreen.route)
+            }
         }
     }
 }

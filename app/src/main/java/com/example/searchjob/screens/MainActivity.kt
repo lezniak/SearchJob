@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.searchjob.infrastructure.navigation.AppNavHost
 import com.example.searchjob.infrastructure.navigation.allDestinationAfterRegister
 import com.example.searchjob.infrastructure.utils.MyAppBar
+import com.example.searchjob.infrastructure.utils.SnackBarStatic
 import com.example.searchjob.ui.theme.SearchJobTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,6 +41,7 @@ fun AppScreen() {
     val currentDestination = currentBackStack?.destination
     val currentScreen = allDestinationAfterRegister.find { it.route == currentDestination?.route }
     val snackbarHostState = remember { SnackbarHostState() }
+    SnackBarStatic.snackbarStatic = snackbarHostState
 
     Scaffold(snackbarHost = {  SnackbarHost(snackbarHostState)},
         topBar = {

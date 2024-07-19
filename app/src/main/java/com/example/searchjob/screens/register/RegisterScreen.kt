@@ -1,4 +1,4 @@
-package com.example.searchjob.screens.login
+package com.example.searchjob.screens.register
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -44,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(snackbarHostState: SnackbarHostState, onSuccessRegister: () -> Unit) {
-    val viewModel: LoginViewModel = hiltViewModel()
+    val viewModel: RegisterViewModel = hiltViewModel()
     val register by viewModel.onSuccessRegister.collectAsState()
 
     RegisterSection(snackbarHostState)
@@ -63,15 +66,21 @@ private fun RegisterSection(snackbarHostState: SnackbarHostState){
 
 @Composable
 fun InputSection(snackbarHostState: SnackbarHostState) {
-    val viewModel: LoginViewModel = hiltViewModel()
+    val viewModel: RegisterViewModel = hiltViewModel()
     val email by viewModel.email.collectAsState()
     val phoneNumber by viewModel.phoneNumber.collectAsState()
     val password by viewModel.password.collectAsState()
     val repeatPassword by viewModel.repeatPassword.collectAsState()
-    val passwordVisible by viewModel.passwordVisible.collectAsState()
-    val repeatPasswordVisible by viewModel.repeatPasswordVisible.collectAsState()
+    var passwordVisible by remember {
+        mutableStateOf(false)
+    }
+    var repeatPasswordVisible by remember {
+        mutableStateOf(false)
+    }
     val termsChecked by viewModel.termsChecked.collectAsState()
-    val isLoadingbutton by viewModel.isLoadingButton.collectAsState()
+    var isLoadingbutton by remember {
+        mutableStateOf(false)
+    }
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
@@ -104,7 +113,7 @@ fun InputSection(snackbarHostState: SnackbarHostState) {
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(onClick = { viewModel.onPasswordVisibilityChange() }) {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password"
@@ -122,7 +131,7 @@ fun InputSection(snackbarHostState: SnackbarHostState) {
             visualTransformation = if (repeatPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             isError = password != repeatPassword,
             trailingIcon = {
-                IconButton(onClick = { viewModel.onRepeatPasswordVisibilityChange() }) {
+                IconButton(onClick = { repeatPasswordVisible = !repeatPasswordVisible }) {
                     Icon(
                         imageVector = if (repeatPasswordVisible) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
                         contentDescription = if (repeatPasswordVisible) "Hide password" else "Show password"
@@ -152,22 +161,25 @@ fun InputSection(snackbarHostState: SnackbarHostState) {
             showBorder = true,
             showLoader = isLoadingbutton
         ) {
-            viewModel.setIsLoadingButton()
+            isLoadingbutton != isLoadingbutton
 
-            onRegisterButtonClick(viewModel,scope,snackbarHostState)
+            onRegisterButtonClick(viewModel,scope,snackbarHostState) {
+                isLoadingbutton != isLoadingbutton
+            }
         }
     }
 }
 
 fun onRegisterButtonClick(
-    viewModel: LoginViewModel,
+    viewModel: RegisterViewModel,
     scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onError : () -> Unit
 ) {
     val result = viewModel.onValidate() { text ->
         scope.launch {
             snackbarHostState.showSnackbar(text, actionLabel = "Dismiss",false,SnackbarDuration.Short)
-            viewModel.setIsLoadingButton()
+            onError()
         }
     }
 
