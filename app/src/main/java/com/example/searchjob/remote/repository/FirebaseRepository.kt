@@ -1,7 +1,8 @@
 package com.example.searchjob.remote.repository
 
 import android.util.Log
-import com.example.searchjob.infrastructure.model.Job
+import com.example.searchjob.infrastructure.model.JobItem
+import com.example.searchjob.infrastructure.model.mapToJob
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -10,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
+import java.util.Calendar
 
 private const val TAG = "FIREBASE_REPO"
 private const val JOB_COLLECTIONS ="jobs"
@@ -17,7 +19,7 @@ class FirebaseRepository {
     private var auth: FirebaseAuth = Firebase.auth
     private var database : FirebaseFirestore = Firebase.firestore
 
-    suspend fun saveJob(job: Job) : Boolean {
+    suspend fun saveJob(job: JobItem) : Boolean {
         val firstJob = hashMapOf(
             "active" to true,
             "desc" to job.desc,
@@ -30,10 +32,12 @@ class FirebaseRepository {
             "workTime" to job.workTime,
             "benefits" to job.benefits
         )
+
         try {
             database.collection(JOB_COLLECTIONS).add(firstJob).await()
             return true
         }catch (ex:Exception){
+            Log.e(TAG,ex.message.toString())
             return false
         }
     }
@@ -42,7 +46,8 @@ class FirebaseRepository {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
+                    val data = document.data.mapToJob(document.id)
+                    Log.e("TEST",data.toString())
                 }
             }
             .addOnFailureListener { exception ->
