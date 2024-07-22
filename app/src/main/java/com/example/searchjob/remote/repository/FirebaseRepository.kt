@@ -24,7 +24,11 @@ class FirebaseRepository {
             "name" to job.name,
             "type" to job.type,
             "userId" to auth.currentUser?.email,
-            "timestamp" to LocalDate.now()
+            "timestamp" to LocalDate.now(),
+            "startPrice" to job.startPrice,
+            "endPrice" to job.endPrice,
+            "workTime" to job.workTime,
+            "benefits" to job.benefits
         )
         try {
             database.collection(JOB_COLLECTIONS).add(firstJob).await()

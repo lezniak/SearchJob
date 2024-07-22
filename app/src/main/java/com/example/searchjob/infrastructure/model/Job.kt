@@ -9,5 +9,9 @@ data class Job(
     val active : Boolean,
     val type: String,
     val userId: String,
-    val timestamp: Timestamp
+    val timestamp: Timestamp,
+    val startPrice: Int,
+    val endPrice: Int,
+    val workTime: String,
+    val benefits: List<String>
 )
