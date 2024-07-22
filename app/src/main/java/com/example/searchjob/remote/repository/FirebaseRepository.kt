@@ -33,6 +33,18 @@ class FirebaseRepository {
             return false
         }
     }
+    fun getJobsList(){
+        database.collection(JOB_COLLECTIONS)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+    }
      fun registerAccount(
         email: String,
         password: String,

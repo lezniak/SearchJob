@@ -12,5 +12,10 @@ class HomeViewModel @Inject constructor(val firebaseRepository: FirebaseReposito
 
     fun saveJob(){
         //firebaseRepository.saveJob()
+        getJobs()
+    }
+
+    fun getJobs(){
+        firebaseRepository.getJobsList()
     }
 }
