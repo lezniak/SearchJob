@@ -62,6 +62,8 @@ dependencies {
 
     // For hilt Implementation
     implementation("com.google.dagger:hilt-android:2.46.1")
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore.ktx)
     kapt ("com.google.dagger:hilt-compiler:2.46.1")
 
     // For instrumentation tests
