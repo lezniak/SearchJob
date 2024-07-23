@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.util.Calendar
@@ -41,14 +42,17 @@ class FirebaseRepository {
             return false
         }
     }
-    fun getJobsList(){
+    fun getJobsList(onFinishData: (ArrayList<JobItem>) -> Unit){
         database.collection(JOB_COLLECTIONS)
             .get()
             .addOnSuccessListener { result ->
+                val arrayList = ArrayList<JobItem>()
                 for (document in result) {
                     val data = document.data.mapToJob(document.id)
-                    Log.e("TEST",data.toString())
+                    arrayList.add(data)
                 }
+                Log.e("DATA",arrayList.toString())
+                onFinishData(arrayList)
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
