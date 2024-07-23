@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.searchjob.screens.HomeScreen.HomeScreen
+import com.example.searchjob.screens.list.ListScreen
 import com.example.searchjob.screens.login.LoginScreen
 import com.example.searchjob.screens.register.RegisterScreen
 import com.example.searchjob.screens.welcome.WelcomeScreen
@@ -51,6 +52,10 @@ fun AppNavHost(
             LoginScreen {
                 navController.navigateSingleTopTo(HomeScreen.route)
             }
+        }
+
+        composable(ListScreen.route){
+            ListScreen()
         }
     }
 }

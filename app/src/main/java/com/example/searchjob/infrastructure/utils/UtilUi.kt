@@ -21,10 +21,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -33,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -41,6 +47,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.searchjob.R
+import com.example.searchjob.infrastructure.navigation.HomeScreen
+import com.example.searchjob.infrastructure.navigation.ListScreen
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -146,4 +154,30 @@ fun MyAppBar(title: String) {
 
         }
     )
+}
+
+@Composable
+fun BottomNavBar(
+    currentRoute: String,
+    onNavigateTo: (String) -> Unit
+) {
+    val items = listOf(
+        HomeScreen,
+        ListScreen,
+    )
+
+    NavigationBar(
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp
+    ) {
+        items.forEach { item ->
+            NavigationBarItem(
+                icon = { Icon(imageVector = item.icon!!, contentDescription = null) },
+                label = { Text(item.name) },
+                selected = currentRoute == item.route,
+                onClick = { onNavigateTo(item.route) }
+            )
+        }
+    }
 }

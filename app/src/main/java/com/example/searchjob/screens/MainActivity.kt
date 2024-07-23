@@ -16,6 +16,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.searchjob.infrastructure.navigation.AppNavHost
 import com.example.searchjob.infrastructure.navigation.allDestinationAfterRegister
+import com.example.searchjob.infrastructure.navigation.navigateSingleTopTo
+import com.example.searchjob.infrastructure.utils.BottomNavBar
 import com.example.searchjob.infrastructure.utils.MyAppBar
 import com.example.searchjob.infrastructure.utils.SnackBarStatic
 import com.example.searchjob.ui.theme.SearchJobTheme
@@ -47,6 +49,13 @@ fun AppScreen() {
         topBar = {
             if (currentScreen != null)
                 MyAppBar(currentScreen.name)
+        },
+        bottomBar = {
+            if (currentScreen != null){
+                BottomNavBar(currentScreen.route) {
+                    navController.navigateSingleTopTo(it)
+                }
+            }
         })
     { innerPadding ->
         AppNavHost(navController = navController,snackbarHostState, modifier = Modifier.padding(innerPadding))
