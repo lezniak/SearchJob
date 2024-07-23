@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,7 +61,6 @@ fun HomeCardItem(modifier: Modifier = Modifier,jobItem: JobItem){
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .background(Color.White)
             .padding(4.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
@@ -71,12 +72,13 @@ fun HomeCardItem(modifier: Modifier = Modifier,jobItem: JobItem){
             Row(modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically) {
-                when(jobItem.type){
-                    TypeEnum.Remote -> ColorTextBox(Color.Green,"Remote")
-                    TypeEnum.Hybrid -> ColorTextBox(Color.Blue,"Hybrid")
-                    TypeEnum.OnSite -> ColorTextBox(Color.Cyan,"On Site")
-                    TypeEnum.Other -> ColorTextBox(Color.Gray,"Other")
+                val color = when (jobItem.type) {
+                    TypeEnum.Remote -> Color.Green
+                    TypeEnum.Hybrid -> Color.Blue
+                    TypeEnum.OnSite -> Color.Cyan
+                    TypeEnum.Other -> Color.Gray
                 }
+                ColorTextBox(color, jobItem.type.name)
 
                 Text(text = jobItem.startPrice.toString()+"-"+jobItem.endPrice.toString(), textAlign = TextAlign.End)
             }
@@ -84,6 +86,13 @@ fun HomeCardItem(modifier: Modifier = Modifier,jobItem: JobItem){
             Text(text = jobItem.name, fontSize = 24.sp, fontWeight = Bold, lineHeight = 30.sp, textAlign = TextAlign.Center, modifier = modifier.fillMaxWidth())
             Text(text = jobItem.company, fontSize = 16.sp, lineHeight = 30.sp, textAlign = TextAlign.Center,modifier = modifier.fillMaxWidth())
             DescriptionText(description =jobItem.desc , lines = 2)
+            HorizontalDivider(color = Color.Blue, thickness = 1.dp, modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+            Spacer(modifier = Modifier.width(4.dp))
+            TextButton(onClick = { /*TODO*/ }, modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)) {
+                Text(text = "VIEW JOB")
+            }
         }
 
     }

@@ -3,6 +3,7 @@ package com.example.searchjob.infrastructure.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed interface AppDestination {
@@ -42,11 +43,11 @@ data object HomeScreen : AppDestination {
 
 data object ListScreen : AppDestination {
     override val route: String
-        get() = "list"
+        get() = "myjobs"
     override val name: String
-        get() = "List"
+        get() = "My jobs"
     override val icon: ImageVector?
-        get() = Icons.Default.List
+        get() = Icons.Default.Person
 
 }
 
@@ -59,5 +60,15 @@ data object LoginScreen : AppDestination {
         get() = null
 }
 
+data object AddJobScreen: AppDestination{
+    override val route: String
+        get() = "add_job"
+    override val name: String
+        get() = "Add Job"
+    override val icon: ImageVector?
+        get() = null
+
+}
+
 val allDestinationBeforeRegister = listOf(Register,Welcome)
-val allDestinationAfterRegister = listOf(HomeScreen,ListScreen)
+val allDestinationAfterRegister = listOf(HomeScreen,ListScreen,AddJobScreen)

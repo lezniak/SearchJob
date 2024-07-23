@@ -9,10 +9,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
-import java.util.Calendar
 
 private const val TAG = "FIREBASE_REPO"
 private const val JOB_COLLECTIONS ="jobs"
