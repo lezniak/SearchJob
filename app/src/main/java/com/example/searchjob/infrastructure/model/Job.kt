@@ -1,6 +1,7 @@
 package com.example.searchjob.infrastructure.model
 
-import com.google.firebase.Timestamp
+import java.sql.Timestamp
+
 
 data class JobItem(
     val id : String = "",
@@ -9,7 +10,7 @@ data class JobItem(
     val active : Boolean = false,
     var type: TypeEnum = TypeEnum.Other,
     val userId: String = "",
-    val timestamp: Timestamp?= null,
+    val timestamp: String?= null,
     val startPrice: Long = 0,
     val endPrice: Long = 0,
     val workTime: String = "",
@@ -24,13 +25,12 @@ fun Map<String, Any>.mapToJob(id: String): JobItem {
         desc = get("desc") as String,
         active = get("active") as Boolean,
         type = when(get("type") as String){
-            "remote" -> TypeEnum.Remote
-            "hybrid" -> TypeEnum.Hybrid
-            "onsite" -> TypeEnum.OnSite
+            "Remote" -> TypeEnum.Remote
+            "Hybrid" -> TypeEnum.Hybrid
+            "Onsite" -> TypeEnum.OnSite
             else -> TypeEnum.Other
         },
         userId = get("userId") as String,
-        timestamp = get("timestamp") as Timestamp,
         startPrice = get("startPrice") as Long,
         endPrice = get("endPrice") as Long,
         workTime = get("workTime") as String,

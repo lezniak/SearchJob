@@ -29,7 +29,8 @@ class FirebaseRepository {
             "startPrice" to job.startPrice,
             "endPrice" to job.endPrice,
             "workTime" to job.workTime,
-            "benefits" to job.benefits
+            "benefits" to job.benefits,
+            "company" to job.company
         )
 
         try {

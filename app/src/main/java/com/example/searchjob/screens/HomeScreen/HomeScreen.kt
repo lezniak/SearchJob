@@ -41,6 +41,7 @@ fun HomeScreen() {
 @Composable
 fun HomeSection() {
     val viewModel: HomeViewModel = hiltViewModel()
+    viewModel.getJobs()
     val items by viewModel.jobList.collectAsState()
 
     if (items.isNotEmpty()){

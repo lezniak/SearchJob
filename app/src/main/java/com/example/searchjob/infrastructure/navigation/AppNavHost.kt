@@ -87,10 +87,10 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         popUpTo(
             this@navigateSingleTopTo.graph.findStartDestination().id
         ) {
-            saveState = true
+            //saveState = true
         }
         launchSingleTop = true
-        restoreState = true
+        //restoreState = true
     }
 
 fun NavHostController.navigateAndClearHistory(route: String) =

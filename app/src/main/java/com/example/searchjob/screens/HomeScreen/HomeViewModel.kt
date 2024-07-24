@@ -20,10 +20,6 @@ class HomeViewModel @Inject constructor(val firebaseRepository: FirebaseReposito
     private val _jobsList = MutableStateFlow(arrayListOf<JobItem>())
     val jobList: StateFlow<ArrayList<JobItem>> = _jobsList
 
-    init {
-        getJobs()
-    }
-
     fun getJobs(){
         firebaseRepository.getJobsList() {
             _jobsList.value = it

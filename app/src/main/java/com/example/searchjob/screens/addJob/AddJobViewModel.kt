@@ -1,14 +1,20 @@
 package com.example.searchjob.screens.addJob
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.searchjob.infrastructure.model.JobItem
 import com.example.searchjob.infrastructure.model.TypeEnum
+import com.example.searchjob.remote.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
-class AddJobViewModel @Inject constructor() : ViewModel() {
+class AddJobViewModel @Inject constructor(
+    private val firebaseRepository: FirebaseRepository
+) : ViewModel() {
     private val _jobItem = MutableStateFlow<JobItem>(JobItem())
     val jobItem: StateFlow<JobItem> = _jobItem
 
@@ -58,5 +64,11 @@ class AddJobViewModel @Inject constructor() : ViewModel() {
         val currentBenefits = _jobItem.value.benefits?.toMutableList()
         currentBenefits?.remove(benefit)
         _jobItem.value = currentBenefits?.let { _jobItem.value.copy(benefits = it) }!!
+    }
+
+    fun saveUser(){
+        viewModelScope.launch {
+            firebaseRepository.saveJob(_jobItem.value)
+        }
     }
 }
