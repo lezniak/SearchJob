@@ -3,18 +3,18 @@ package com.example.searchjob.infrastructure.model
 import com.google.firebase.Timestamp
 
 data class JobItem(
-    val id : String,
-    val name: String,
-    val desc: String,
-    val active : Boolean,
-    val type: TypeEnum,
-    val userId: String,
-    val timestamp: Timestamp,
-    val startPrice: Long,
-    val endPrice: Long,
-    val workTime: String,
-    val benefits: List<String>,
-    val company : String
+    val id : String = "",
+    val name: String = "",
+    val desc: String = "",
+    val active : Boolean = false,
+    var type: TypeEnum = TypeEnum.Other,
+    val userId: String = "",
+    val timestamp: Timestamp?= null,
+    val startPrice: Long = 0,
+    val endPrice: Long = 0,
+    val workTime: String = "",
+    val benefits: List<String> = emptyList<String>(),
+    val company : String = ""
 )
 
 fun Map<String, Any>.mapToJob(id: String): JobItem {
